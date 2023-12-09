@@ -9,5 +9,10 @@ spring:
     hibernate:
       ddl-auto: create
     generate-ddl: true
+  data:
+    redis:
+      host: 127.0.0.1
+      password: kCMN0W5Jqi1g
+
 
 
