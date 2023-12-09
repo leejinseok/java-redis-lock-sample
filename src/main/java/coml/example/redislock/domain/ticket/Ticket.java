@@ -31,4 +31,8 @@ public class Ticket {
         this.event = event;
     }
 
+    public void reservedBy(Member member) {
+        this.member = member;
+    }
+
 }

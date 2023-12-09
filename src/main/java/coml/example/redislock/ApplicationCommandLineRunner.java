@@ -5,7 +5,6 @@ import coml.example.redislock.domain.event.EventRepository;
 import coml.example.redislock.domain.member.Member;
 import coml.example.redislock.domain.member.MemberRepository;
 import coml.example.redislock.domain.ticket.Ticket;
-import coml.example.redislock.domain.ticket.TicketRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +16,6 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
 
     private final MemberRepository memberRepository;
     private final EventRepository eventRepository;
-    private final TicketRepository ticketRepository;
 
     @Override
     @Transactional
