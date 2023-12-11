@@ -6,3 +6,4 @@ redis를 사용해서 분산락을 사용하는 간단한 예제를 만들어보
 - spring boot 
 - spring boot web
 - spring boot jpa
+- redisson
