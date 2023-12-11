@@ -1,10 +1,7 @@
 package coml.example.redislock;
 
-import coml.example.redislock.domain.event.Event;
 import coml.example.redislock.domain.event.EventRepository;
-import coml.example.redislock.domain.member.Member;
 import coml.example.redislock.domain.member.MemberRepository;
-import coml.example.redislock.domain.ticket.Ticket;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -20,15 +17,15 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        Member member = Member.of("홍길동");
-        memberRepository.save(member);
-
-        Event event = Event.of(20);
-        for (int i = 0; i < 20; i++) {
-            event.addTicket(new Ticket());
-        }
-
-        eventRepository.save(event);
-
+//        Member member = Member.of("홍길동");
+//        memberRepository.save(member);
+//
+//        Event event = Event.of(20);
+//        for (int i = 0; i < 20; i++) {
+//            event.addTicket(new Ticket());
+//        }
+//
+//        eventRepository.save(event);
     }
+
 }

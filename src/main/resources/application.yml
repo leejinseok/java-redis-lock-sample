@@ -15,5 +15,11 @@ spring:
       password: kCMN0W5Jqi1g
       port: 6379
 
-
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    show-sql: false
 
