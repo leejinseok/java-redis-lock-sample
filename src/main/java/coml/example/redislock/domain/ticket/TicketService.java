@@ -36,4 +36,18 @@ public class TicketService {
     }
 
 
+    @Transactional
+    public void reserveTicketInPessimisticLock(long eventId, long memberId) {
+        Optional<Ticket> firstTicket = ticketRepository.findAllByEventIdAndNotReservedWithPessimisticWrite(eventId);
+        if (firstTicket.isEmpty()) {
+            throw new RuntimeException("더이상 예약가능한 티켓이 존재하지 않습니다.");
+        }
+
+        Ticket ticket = firstTicket.get();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+        ticket.reservedBy(member);
+    }
+
+
 }

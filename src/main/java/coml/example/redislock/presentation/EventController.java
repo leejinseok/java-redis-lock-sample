@@ -16,7 +16,7 @@ public class EventController {
     @PostMapping("/{eventId}/reserveTicket")
     public void reserveTicket(@PathVariable Long eventId, @RequestParam Long memberId) {
         ticketService.reserveTicket(eventId, memberId);
-        log.info("EventController > reserveTicket > success!!");
+        log.info("EventController > reserveTicket > ");
     }
 
 }

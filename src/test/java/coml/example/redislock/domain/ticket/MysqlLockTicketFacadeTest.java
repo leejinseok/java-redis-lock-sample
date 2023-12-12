@@ -21,10 +21,10 @@ import static coml.example.redislock.domain.ticket.TicketServiceTest.NUMBER_OF_R
 
 @SpringBootTest
 @ActiveProfiles({"test"})
-class RedissonLockTicketFacadeTest {
+class MysqlLockTicketFacadeTest {
 
     @Autowired
-    private RedissonLockTicketFacade redissonLockTicketFacade;
+    private MysqlLockTicketFacade mysqlLockTicketFacade;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -44,7 +44,7 @@ class RedissonLockTicketFacadeTest {
     }
 
     @Test
-    void 멀티쓰레드에서_티켓동시예매시_레디스락을_활용하여_테스트() throws InterruptedException {
+    void mysql락을_활용하여_티켓예매_테스트() throws InterruptedException {
         long beforeTime = System.currentTimeMillis();
         AtomicInteger successCount = new AtomicInteger(0);
 
@@ -54,7 +54,7 @@ class RedissonLockTicketFacadeTest {
         for (int i = 0; i < NUMBER_OF_REQUESTS; i++) {
             threadPoolExecutor.execute(() -> {
                 try {
-                    redissonLockTicketFacade.reserveTicket(1L, 1L);
+                    mysqlLockTicketFacade.reserveTicket(1L, 1L);
                     int increment = successCount.incrementAndGet();
                     successCount.set(increment);
                 } catch (RuntimeException e) {
@@ -72,6 +72,5 @@ class RedissonLockTicketFacadeTest {
 
         Assertions.assertEquals(EVENT_LIMIT, successCount.intValue());
     }
-
 
 }

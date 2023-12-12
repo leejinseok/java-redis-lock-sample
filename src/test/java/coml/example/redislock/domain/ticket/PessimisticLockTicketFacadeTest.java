@@ -18,10 +18,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static coml.example.redislock.BaseConfig.threadPoolExecutor;
+import static coml.example.redislock.domain.ticket.TicketServiceTest.EVENT_LIMIT;
+import static coml.example.redislock.domain.ticket.TicketServiceTest.NUMBER_OF_REQUESTS;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
-class TicketServiceTest {
+class PessimisticLockTicketFacadeTest {
+
+    @Autowired
+    private PessimisticLockTicketFacade pessimisticLockTicketFacade;
+
 
     @Autowired
     private MemberRepository memberRepository;
@@ -29,13 +35,7 @@ class TicketServiceTest {
     @Autowired
     private EventRepository eventRepository;
 
-    @Autowired
-    private TicketService ticketService;
-
-    private final Logger logger = LogManager.getLogger(TicketServiceTest.class);
-
-    public static final int EVENT_LIMIT = 1000;
-    public static final int NUMBER_OF_REQUESTS = 1200;
+    private final Logger logger = LogManager.getLogger(PessimisticLockTicketFacadeTest.class);
 
     @BeforeEach
     void setUp() {
@@ -48,38 +48,6 @@ class TicketServiceTest {
         eventRepository.save(event);
     }
 
-    @Test
-    void 멀티쓰레드에서_티켓동시예매시_티켓개수보다_더많이_예매에_성공하는_테스트() throws InterruptedException {
-        long beforeTime = System.currentTimeMillis();
-        AtomicInteger successCount = new AtomicInteger(0);
-        ThreadPoolExecutor threadPoolExecutor = threadPoolExecutor();
-
-        CountDownLatch latch = new CountDownLatch(NUMBER_OF_REQUESTS);
-        for (int i = 0; i < NUMBER_OF_REQUESTS; i++) {
-            threadPoolExecutor.execute(() -> {
-                try {
-                    ticketService.reserveTicket(1L, 1L);
-                    int increment = successCount.incrementAndGet();
-                    successCount.set(increment);
-
-                } catch (RuntimeException ignored) {
-
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                latch.countDown();
-            });
-        }
-
-        latch.await();
-        logger.info("successCount: {}", successCount);
-
-        long afterTime = System.currentTimeMillis();
-        long secDiffTime = (afterTime - beforeTime);
-        System.out.println("시간차이(m) : " + secDiffTime);
-
-        Assertions.assertTrue(successCount.intValue() > EVENT_LIMIT);
-    }
 
     @Test
     void 멀티쓰레드에서_티켓동시예매시_비관적락사용_테스트() throws InterruptedException {
@@ -91,7 +59,7 @@ class TicketServiceTest {
         for (int i = 0; i < NUMBER_OF_REQUESTS; i++) {
             threadPoolExecutor.execute(() -> {
                 try {
-                    ticketService.reserveTicketInPessimisticLock(1L, 1L);
+                    pessimisticLockTicketFacade.reserveTicket(1L, 1L);
                     int increment = successCount.incrementAndGet();
                     successCount.set(increment);
 
@@ -113,8 +81,5 @@ class TicketServiceTest {
 
         Assertions.assertTrue(successCount.intValue() > EVENT_LIMIT);
     }
-
-
-
 
 }

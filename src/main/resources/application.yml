@@ -4,6 +4,8 @@ spring:
     url: jdbc:mysql://localhost:3306/test
     username: root
     password: password
+    hikari:
+      maximum-pool-size: 10
   jpa:
     show-sql: true
     hibernate:
@@ -21,5 +23,5 @@ spring:
     activate:
       on-profile: test
   jpa:
-    show-sql: true
+    show-sql: false
 
